@@ -14,8 +14,9 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth import login
+from django.utils import simplejson as json
 from django.utils.translation import ugettext_lazy as _, ugettext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from allauth.utils import import_callable
 
@@ -104,7 +105,15 @@ def perform_login(request, user, redirect_url=None):
 
     if not redirect_url:
         redirect_url = get_default_redirect(request)
-    return HttpResponseRedirect(redirect_url)
+    if request.is_ajax():
+        response_data = {
+            'login_success': True,
+            'username': str(user),
+        }
+        return HttpResponse(json.dumps(response_data), 
+                            mimetype="application/json")
+    else:
+        return HttpResponseRedirect(redirect_url)
 
 
 def complete_signup(request, user, success_url):
