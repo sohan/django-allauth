@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.utils import simplejson
 
@@ -33,7 +34,7 @@ class SocialApp(models.Model):
         return self.name
 
 class SocialAccount(models.Model):
-    user = models.ForeignKey(allauth.app_settings.USER_MODEL)
+    user = models.ForeignKey(User)
     provider = models.CharField(max_length=30,
                                 choices=providers.registry.as_choices())
     # Just in case you're wondering if an OpenID identity URL is going

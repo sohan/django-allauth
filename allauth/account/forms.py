@@ -11,6 +11,7 @@ from django.utils.importlib import import_module
 
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import Site
@@ -19,14 +20,12 @@ from models import EmailAddress
 
 # from models import PasswordReset
 from utils import perform_login, send_email_confirmation, format_email_subject
-from allauth.utils import (email_address_exists, generate_unique_username, 
-                           get_user_model)
+from allauth.utils import email_address_exists, generate_unique_username
 
-from app_settings import AuthenticationMethod, EmailVerificationMethod
+from app_settings import AuthenticationMethod
         
 import app_settings
 
-User = get_user_model()
 USERNAME_REGEX = UserCreationForm().fields['username'].regex
 
 class PasswordField(forms.CharField):
@@ -178,11 +177,9 @@ class BaseSignupForm(_base_signup_form_class()):
 
     def __init__(self, *args, **kwargs):
         super(BaseSignupForm, self).__init__(*args, **kwargs)
-        if (app_settings.EMAIL_REQUIRED 
-            or (app_settings.EMAIL_VERIFICATION 
-                == EmailVerificationMethod.MANDATORY) 
-            or (app_settings.AUTHENTICATION_METHOD 
-                == AuthenticationMethod.EMAIL)):
+        if (app_settings.EMAIL_REQUIRED or 
+            app_settings.EMAIL_VERIFICATION or
+            app_settings.AUTHENTICATION_METHOD == AuthenticationMethod.EMAIL):
             self.fields["email"].label = ugettext("E-mail")
             self.fields["email"].required = True
         else:
