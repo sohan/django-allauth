@@ -107,8 +107,8 @@ def perform_login(request, user, redirect_url=None):
         redirect_url = get_default_redirect(request)
     if request.is_ajax():
         response_data = {
-            'login_success': True,
-            'username': str(user),
+            'authenticated': True,
+            'display_name': str(user),
         }
         return HttpResponse(json.dumps(response_data), 
                             mimetype="application/json")
