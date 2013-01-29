@@ -78,7 +78,7 @@ def user_display(user):
 #     return False
 
 
-def perform_login(request, user, redirect_url=None):
+def perform_login(request, user, redirect_url=None, signed_up=False):
     from models import EmailAddress
 
     # not is_active: social users are redirected to a template
@@ -110,6 +110,7 @@ def perform_login(request, user, redirect_url=None):
         response_data = {
             'authenticated': True,
             'display_name': str(user),
+            'new_user': signed_up
         }
         return HttpResponse(json.dumps(response_data), 
                             mimetype="application/json")
@@ -121,7 +122,7 @@ def complete_signup(request, user, success_url):
     signals.user_signed_up.send(sender=user.__class__, 
                                 request=request, 
                                 user=user)
-    return perform_login(request, user, redirect_url=success_url)
+    return perform_login(request, user, redirect_url=success_url, signed_up=True)
 
 
 def send_email_confirmation(request, user):
