@@ -72,7 +72,7 @@ def signup(request, **kwargs):
         form = form_class(request.POST)
         if form.is_valid():
             user = form.save(request=request)
-            return complete_signup(request, user, success_url)
+            return complete_signup(request, user, success_url, provider='email')
     else:
         form = form_class()
     ctx = {"form": form,

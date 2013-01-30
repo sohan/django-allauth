@@ -72,7 +72,8 @@ def _login_social_account(request, sociallogin):
             context_instance=RequestContext(request))
     else:
         ret = perform_login(request, user, 
-                            redirect_url=sociallogin.get_redirect_url())
+                            redirect_url=sociallogin.get_redirect_url(),
+                            provider=sociallogin.account.provider)
     return ret
 
 
@@ -171,7 +172,8 @@ def complete_social_signup(request, sociallogin):
         _copy_avatar(request, sociallogin.account.user, sociallogin.account)
     return complete_signup(request, 
                            sociallogin.account.user, 
-                           sociallogin.get_redirect_url())
+                           sociallogin.get_redirect_url(), 
+                           provider=sociallogin.account.provider)
 
 
 # TODO: Factor out callable importing functionality

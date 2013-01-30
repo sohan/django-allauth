@@ -78,7 +78,7 @@ def user_display(user):
 #     return False
 
 
-def perform_login(request, user, redirect_url=None, signed_up=False):
+def perform_login(request, user, redirect_url=None, signed_up=False, provider=None):
     from models import EmailAddress
 
     # not is_active: social users are redirected to a template
@@ -99,7 +99,8 @@ def perform_login(request, user, redirect_url=None, signed_up=False):
         user.backend = "django.contrib.auth.backends.ModelBackend"
     signals.user_logged_in.send(sender=user.__class__, 
                                 request=request, 
-                                user=user)
+                                user=user,
+                                provider=provider)
     login(request, user)
     messages.add_message(request, messages.SUCCESS,
                          ugettext("Successfully signed in as %(user)s.") % { "user": user_display(user) } )
@@ -110,7 +111,8 @@ def perform_login(request, user, redirect_url=None, signed_up=False):
         response_data = {
             'authenticated': True,
             'display_name': str(user),
-            'new_user': signed_up
+            'new_user': signed_up,
+            'provider': provider,
         }
         return HttpResponse(json.dumps(response_data), 
                             mimetype="application/json")
@@ -118,11 +120,12 @@ def perform_login(request, user, redirect_url=None, signed_up=False):
         return HttpResponseRedirect(redirect_url)
 
 
-def complete_signup(request, user, success_url):
+def complete_signup(request, user, success_url, provider=None):
     signals.user_signed_up.send(sender=user.__class__, 
                                 request=request, 
-                                user=user)
-    return perform_login(request, user, redirect_url=success_url, signed_up=True)
+                                user=user,
+                                provider=provider)
+    return perform_login(request, user, redirect_url=success_url, signed_up=True, provider=provider)
 
 
 def send_email_confirmation(request, user):
