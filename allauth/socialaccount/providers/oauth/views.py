@@ -49,6 +49,11 @@ class OAuthView(object):
 class OAuthLoginView(OAuthView):
     def dispatch(self, request):
         callback_url = reverse(self.adapter.provider_id + "_callback")
+        if '?' in callback_url:
+            callback_url += '&'
+        else:
+            callback_url += '?'
+        callback_url += request.GET.urlencode()
         # TODO: Can't this be moved as query param into callback?
         # Tried but failed somehow, needs further study...
         request.session['oauth_login_state'] \
