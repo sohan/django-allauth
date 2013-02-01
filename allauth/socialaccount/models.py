@@ -172,6 +172,9 @@ class SocialLogin(object):
                          fallback=allauth.app_settings.LOGIN_REDIRECT_URL):
         url = self.state.get('next') or fallback
         return url
+
+    def get_distinct_id(self):
+        return self.state.get('distinct_id', None)
             
     @classmethod
     def state_from_request(cls, request):
@@ -179,6 +182,9 @@ class SocialLogin(object):
         next = get_login_redirect_url(request, fallback=None)
         if next:
             state['next'] = next
+        distinct_id = request.GET.get('distinct_id', None)
+        if distinct_id:
+            state['distinct_id'] = distinct_id
         return state
 
     @classmethod

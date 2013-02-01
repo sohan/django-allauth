@@ -173,7 +173,8 @@ def complete_social_signup(request, sociallogin):
     return complete_signup(request, 
                            sociallogin.account.user, 
                            sociallogin.get_redirect_url(), 
-                           provider=sociallogin.account.provider)
+                           provider=sociallogin.account.provider,
+                           distinct_id=sociallogin.get_distinct_id())
 
 
 # TODO: Factor out callable importing functionality
