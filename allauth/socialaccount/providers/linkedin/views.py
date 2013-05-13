@@ -12,13 +12,22 @@ from allauth.utils import valid_email_or_none
 
 from provider import LinkedInProvider
 
+from allauth.socialaccount import app_settings
 
 class LinkedInAPI(OAuth):
     url = 'https://api.linkedin.com/v1/people/~'
-    fields = ['id', 'first-name', 'last-name', 'email-address']
+    default_fields = ['id', 'first-name', 'last-name', 'email-address']
+    settings = app_settings.PROVIDERS.get('linkedin')
+
+    def _get_fields(self):
+        fields = self.settings.get('FIELDS')
+        if fields:
+            return fields
+        else:
+            return self.default_fields
 
     def get_user_info(self):
-        url = self.url + ':(%s)' % ','.join(self.fields)
+        url = self.url + ':(%s)' % ','.join(self._get_fields())
         raw_xml = self.query(url)
         try:
             return self.to_dict(ElementTree.fromstring(raw_xml))
