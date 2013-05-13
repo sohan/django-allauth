@@ -69,12 +69,12 @@ def signup(request, **kwargs):
         success_url = get_default_redirect(request, redirect_field_name)
 
     if request.method == "POST":
-        form = form_class(request.POST)
+        form = form_class(request.POST, request=request)
         if form.is_valid():
             user = form.save(request=request)
             return complete_signup(request, user, success_url, provider='email')
     else:
-        form = form_class()
+        form = form_class(initial=request.GET)
     ctx = {"form": form,
            "login_url": passthrough_login_redirect_url(request,
                                                        reverse("account_login")),

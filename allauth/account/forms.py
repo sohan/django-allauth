@@ -210,7 +210,7 @@ class BaseSignupForm(_base_signup_form_class()):
                     (_("A user is already registered with this e-mail address."))
         return value
     
-    def create_user(self, commit=True):
+    def create_user(self, request, commit=True):
         user = User()
         # data collected by providers, if any, is passed as `initial`
         # signup form data. This may contain fields such as
@@ -266,8 +266,8 @@ class SignupForm(BaseSignupForm):
                 raise forms.ValidationError(_("You must type the same password each time."))
         return self.cleaned_data
     
-    def create_user(self, commit=True):
-        user = super(SignupForm, self).create_user(commit=False)
+    def create_user(self, request, commit=True):
+        user = super(SignupForm, self).create_user(request, commit=False)
         password = self.cleaned_data.get("password1")
         if password:
             user.set_password(password)
@@ -290,7 +290,7 @@ class SignupForm(BaseSignupForm):
         else:
             confirmed = False
         
-        new_user = self.create_user()
+        new_user = self.create_user(request)
         super(SignupForm, self).save(new_user)
 
         # @@@ clean up some of the repetition below -- DRY!
