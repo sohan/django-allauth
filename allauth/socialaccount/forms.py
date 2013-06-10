@@ -20,7 +20,7 @@ class SignupForm(BaseSignupForm):
         super(SignupForm, self).__init__(*args, **kwargs)
 
     def save(self, request=None):
-        new_user = self.create_user()
+        new_user = self.create_user(request)
         self.sociallogin.account.user = new_user
         self.sociallogin.save()
         super(SignupForm, self).save(new_user) 
