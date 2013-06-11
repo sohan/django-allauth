@@ -106,6 +106,9 @@ def complete_social_login(request, sociallogin):
             # New social account
             sociallogin.account.user = request.user
             sociallogin.save()
+            signals.social_account_added.send(sender=SocialLogin,
+                                              request=request,
+                                              sociallogin=sociallogin)
             default_next = reverse('socialaccount_connections')
             next = sociallogin.get_redirect_url()
             messages.add_message(request, messages.INFO, 
