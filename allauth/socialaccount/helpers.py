@@ -107,7 +107,7 @@ def complete_social_login(request, sociallogin):
             sociallogin.account.user = request.user
             sociallogin.save()
             default_next = reverse('socialaccount_connections')
-            next = sociallogin.get_redirect_url(fallback=default_next)
+            next = sociallogin.get_redirect_url()
             messages.add_message(request, messages.INFO, 
                                  _('The social account has been connected'))
             return HttpResponseRedirect(next)
