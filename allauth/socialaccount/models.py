@@ -149,7 +149,7 @@ class SocialLogin(object):
             a = SocialAccount.objects.get(provider=self.account.provider, 
                                           uid=self.account.uid)
             # Update account
-            a.extra_data = self.account.extra_data
+            a.extra_data.update(self.account.extra_data)
             self.account = a
             a.save()
             # Update token
