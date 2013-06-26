@@ -178,7 +178,7 @@ class SocialLogin(object):
             
     @classmethod
     def state_from_request(cls, request):
-        state = {}
+        state = dict(request.GET.iteritems())
         next = get_login_redirect_url(request, fallback=None)
         if next:
             state['next'] = next

@@ -118,12 +118,13 @@ def perform_login(request, user, redirect_url=None, provider=None):
         return HttpResponseRedirect(redirect_url)
 
 
-def complete_signup(request, user, success_url, provider=None, distinct_id=None):
+def complete_signup(request, user, success_url, provider=None, distinct_id=None, sociallogin=None):
     signals.user_signed_up.send(sender=user.__class__, 
                                 request=request, 
                                 user=user,
                                 provider=provider,
-                                distinct_id=distinct_id)
+                                distinct_id=distinct_id,
+                                sociallogin=sociallogin)
     return perform_login(request, user, redirect_url=success_url, provider=provider)
 
 
