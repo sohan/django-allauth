@@ -75,11 +75,16 @@ def signup(request, **kwargs):
             return complete_signup(request, user, success_url, provider='email')
     else:
         form = form_class(initial=request.GET)
+
+    extra_context = kwargs.pop('extra_context', {})
+    if extra_context is None:
+        extra_context = {}
     ctx = {"form": form,
            "login_url": passthrough_login_redirect_url(request,
                                                        reverse("account_login")),
            "redirect_field_name": redirect_field_name,
            "redirect_field_value": request.REQUEST.get(redirect_field_name) }
+    ctx.update(extra_context)
     return render_to_response(template_name, RequestContext(request, ctx))
 
 
