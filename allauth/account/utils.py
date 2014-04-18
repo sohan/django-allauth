@@ -102,8 +102,9 @@ def perform_login(request, user, redirect_url=None, provider=None):
                                 user=user,
                                 provider=provider)
     login(request, user)
-    messages.add_message(request, messages.SUCCESS,
-                         ugettext("Successfully signed in as %(user)s.") % { "user": user_display(user) } )
+    if app_settings.SHOW_LOGIN_MESSAGE:
+        messages.add_message(request, messages.SUCCESS,
+                             ugettext("Successfully signed in as %(user)s.") % { "user": user_display(user) } )
 
     if not redirect_url:
         redirect_url = get_default_redirect(request)

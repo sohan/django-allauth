@@ -88,3 +88,6 @@ assert (not AUTHENTICATION_METHOD==AuthenticationMethod.EMAIL) or EMAIL_REQUIRED
 # If login includes email, login must be unique
 assert (AUTHENTICATION_METHOD==AuthenticationMethod.USERNAME) or UNIQUE_EMAIL
 assert EMAIL_VERIFICATION != EmailVerificationMethod.MANDATORY or EMAIL_REQUIRED
+
+# whether to show a message when the user logs in or not
+SHOW_LOGIN_MESSAGE = getattr(settings, 'ACCOUNT_SHOW_LOGIN_MESSAGE', True)
